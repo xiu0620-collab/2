@@ -3,546 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZPD 小天使特務中心</title>
-    <script type="module">
-        // Firebase 將在下方載入
-    </script>
+    <title>動物方城市：ZPD 交換禮物大會</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Noto+Sans+TC:wght@400;700&display=swap');
-
+        /* --- 全域設定 --- */
         :root {
-            --judy-blue: #1565C0;
-            --judy-dark: #0D47A1;
-            --nick-green: #66BB6A;
-            --carrot-orange: #FF7043;
-            --badge-gold: #FFD54F;
-            --bg-color: #E3F2FD;
+            --zpd-dark-blue: #0a1a33;
+            --zpd-gold: #f3c623;
+            --badge-red: #c0392b;
+            --scroll-text: #4a3b2a; /* 卷軸上的文字顏色 (深咖啡) */
         }
 
         body {
-            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
-            background-color: var(--bg-color);
-            /* 背景裝飾：模擬動物方城市的天際線或氛圍 */
-            background-image: 
-                linear-gradient(135deg, rgba(255,255,255,0.5) 25%, transparent 25%),
-                linear-gradient(225deg, rgba(255,255,255,0.5) 25%, transparent 25%),
-                linear-gradient(45deg, rgba(255,255,255,0.5) 25%, transparent 25%),
-                linear-gradient(315deg, rgba(255,255,255,0.5) 25%, transparent 25%);
-            background-position: 10px 0, 10px 0, 0 0, 0 0;
-            background-size: 40px 40px;
-            background-repeat: repeat;
+            font-family: 'Noto Sans TC', sans-serif;
+            /* 整體網頁背景：保持原本的高畫質夜景，或您可以換成自己喜歡的 */
+            background-image: url('https://images.alphacoders.com/674/674812.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* 背景遮罩 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 26, 51, 0.6);
+            z-index: -1;
+        }
+
+        /* --- 標題區 --- */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* 圖片1：尼克與茱蒂自拍 */
+        .header-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid var(--zpd-gold);
+            /* 引用本地圖片 header.jpg */
+            background-image: url('header.jpg'); 
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 25px rgba(243, 198, 35, 0.6);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--zpd-gold);
+            text-shadow: 3px 3px 0 #000, 0 0 20px rgba(243, 198, 35, 0.8);
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
+        /* --- 區域 1: 抽籤系統 (使用卷軸背景) --- */
+        .lottery-section {
+            /* 圖片2：城市卷軸背景 */
+            background-image: url('scroll.jpg');
+            background-size: 100% 100%; /* 強制填滿 */
+            background-repeat: no-repeat;
+            background-position: center;
+            
+            /* 調整容器大小以配合卷軸比例 */
+            max-width: 800px;
+            min-height: 500px; 
+            margin: 0 auto 60px auto;
+            padding: 80px 100px; /* 增加內距，確保文字顯示在卷軸中間 */
+            box-sizing: border-box;
+            
+            text-align: center;
+            /* 文字顏色改為深色，因為卷軸是淺色的 */
+            color: var(--scroll-text); 
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            /* 去掉原本的邊框和陰影，因為圖片本身就有 */
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .lottery-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--scroll-text);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .lottery-btn {
+            background: linear-gradient(to bottom, #f3c623, #e67e22);
+            color: var(--zpd-dark-blue);
+            border: 2px solid #fff;
+            padding: 12px 40px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.1s;
+            margin-bottom: 20px;
+        }
+
+        .lottery-btn:active {
+            transform: scale(0.95);
+        }
+
+        #result-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            display: none;
+            max-height: 300px; /* 限制高度，超過可捲動 */
+            overflow-y: auto;
+        }
+
+        /* 卷軸內的結果樣式 */
+        #result-list li {
+            background: rgba(255, 255, 255, 0.6);
+            border: 2px solid var(--scroll-text);
+            color: var(--scroll-text);
+            padding: 5px;
+            border-radius: 5px;
+            font-weight: 900;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        /* --- 區域 2: 禮物牌子區 --- */
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: #fff;
+            text-shadow: 2px 2px 5px #000;
+        }
+
+        .section-title span {
+            border-bottom: 4px solid var(--zpd-gold);
+            padding-bottom: 10px;
+        }
+
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 50px auto;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            height: 350px;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* 標題區：ZPD 風格 */
-        .header-box {
-            background: #fff;
-            border: 5px solid var(--judy-dark);
-            border-radius: 20px;
-            padding: 15px 40px;
-            box-shadow: 0 8px 0 rgba(13, 71, 161, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .header-box::before {
-            content: '🚓';
-            position: absolute; left: -20px; top: 50%; transform: translateY(-50%);
-            font-size: 3rem;
-        }
-        .header-box::after {
-            content: '🦊';
-            position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
-            font-size: 3rem;
-        }
-
-        h1 { 
-            margin: 0; 
-            color: var(--judy-dark); 
-            letter-spacing: 2px; 
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        
-        .status-bar { 
-            font-size: 0.9rem; 
-            color: var(--carrot-orange); 
-            margin-top: 5px; 
-            font-weight: bold; 
-            background: #FFF3E0;
-            padding: 2px 10px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-
-        .container {
-            width: 100%; max-width: 900px;
-            /* 玻璃擬態 */
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 20px; 
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 2px solid white;
-        }
-
-        .instruction {
-            color: #555;
-            margin-bottom: 25px;
-            font-size: 1.1em;
-            line-height: 1.6;
-            font-weight: 600;
-        }
-
-        .name-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        /* 按鈕：警徽造型 */
-        .name-btn {
-            background: linear-gradient(135deg, var(--badge-gold), #FFC107);
-            color: #5d4037;
-            border: 3px solid #FFF8E1;
-            padding: 10px 5px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 彈跳效果 */
-            box-shadow: 0 5px 15px rgba(255, 213, 79, 0.4);
-            height: 120px; 
-            width: 100%;
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
             justify-content: center;
-            /* 盾牌形狀 */
-            clip-path: polygon(50% 0%, 100% 15%, 100% 85%, 50% 100%, 0% 85%, 0% 15%);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+            padding: 20px;
+            box-sizing: border-box;
+            border: 4px solid #fff;
         }
 
-        .name-btn::before {
-            content: '⭐';
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            display: block;
+        /* 卡片正面：檔案夾風格 */
+        .card-front {
+            background-color: #f0e6d2;
+            color: #5d4037;
+            border: 5px solid #d4c5a0;
+            /* 檔案夾紋理 */
+            background-image: repeating-linear-gradient(45deg, #f0e6d2 0, #f0e6d2 10px, #e8dec0 10px, #e8dec0 20px);
         }
 
-        .name-btn:hover:not(.drawn) {
-            transform: translateY(-8px) scale(1.05);
-            background: linear-gradient(135deg, var(--carrot-orange), #FF5722);
-            color: white;
-            z-index: 5;
-            text-shadow: none;
-        }
-
-        /* 已抽過樣式 */
-        .name-btn.drawn {
-            background: #546E7A !important;
-            color: #CFD8DC !important;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-        }
-        
-        /* 任務完成印章 */
-        .stamp {
-            position: absolute; 
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) rotate(-15deg);
-            width: 90%;
-            border: 3px dashed #FFF; 
-            color: #FFF;
-            font-size: 14px; 
-            padding: 5px;
-            background: rgba(0,0,0,0.3);
-            font-weight: 900;
-            z-index: 2;
-        }
-
-        /* 重置按鈕 */
-        .reset-area { position: fixed; bottom: 20px; right: 20px; z-index: 50; }
-        .reset-btn { 
-            background: #37474F; color: #fff; border: none; 
-            padding: 10px 20px; cursor: pointer; border-radius: 50px; 
-            font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            transition: 0.3s;
-        }
-        .reset-btn:hover { background: #263238; transform: scale(1.05); }
-        
-        /* 載入遮罩 */
-        #loading-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: var(--judy-blue); z-index: 20000; display: flex;
-            justify-content: center; align-items: center; flex-direction: column;
-            color: white;
-        }
-
-        /* --- Modal: 機密檔案風格 --- */
-        #temple-modal {
-            display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,20,40,0.9);
-            z-index: 9999; justify-content: center; align-items: center;
-            flex-direction: column; backdrop-filter: blur(8px);
-        }
-
-        /* 機密文件袋 */
-        .secret-folder {
-            width: 240px; height: 180px;
-            background: #D7CCC8; /* 紙袋色 */
-            position: relative;
-            border-radius: 5px;
-            border-bottom: 10px solid #A1887F;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        
-        .secret-folder::before {
-            content: 'TOP SECRET';
-            color: #A93226;
-            font-weight: 900;
-            font-size: 24px;
-            border: 4px solid #A93226;
+        .stamp-top-secret {
+            border: 4px solid var(--badge-red);
+            color: var(--badge-red);
             padding: 5px 15px;
+            font-weight: 900;
+            font-size: 1.2rem;
             transform: rotate(-10deg);
-            opacity: 0.8;
-            mask-image: url("data:image/svg+xml;utf8,<svg ...>"); /* 可以在這裡加斑駁效果，這裡略過 */
-        }
-        
-        .secret-folder::after {
-            content: 'ZPD CASE #007';
-            position: absolute; bottom: 10px; right: 10px;
-            font-size: 10px; color: #5d4037; font-family: monospace;
-        }
-
-        /* 文件卡片 */
-        .mission-card {
-            position: absolute;
-            width: 200px; height: 260px;
-            background: #fff;
-            top: 10px; /* 初始在袋子裡 */
+            margin-bottom: 15px;
             border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            padding: 15px;
-            text-align: center;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: -1; /* 在袋子後面 */
-            display: flex; flex-direction: column; justify-content: space-between;
+            background: rgba(255,255,255,0.5);
         }
 
-        .mission-card.revealed {
-            transform: translateY(-200px) scale(1.1); /* 往上彈出 */
-            z-index: 100; /* 跑到袋子前面 */
-        }
-
-        .mission-avatar {
-            font-size: 50px; margin-bottom: 10px;
-            filter: drop-shadow(0 5px 0 rgba(0,0,0,0.1));
-        }
-
-        .target-label { font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 1px; }
-        .target-name { font-size: 36px; color: var(--judy-dark); font-weight: 900; margin: 5px 0; }
-        .mission-note { font-size: 12px; color: var(--carrot-orange); font-weight: bold; }
-
-        .close-btn {
-            background: var(--judy-blue); color: #fff; border: none;
-            padding: 12px 30px; font-size: 16px; cursor: pointer;
-            border-radius: 50px; margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(21, 101, 192, 0.4);
-            transition: 0.2s;
+        .card-front h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
             font-weight: bold;
-        }
-        .close-btn:hover { transform: scale(1.05); background: var(--judy-dark); }
-
-        /* 動畫 Class */
-        .shake-folder { animation: shakeFolder 0.5s infinite; }
-        
-        @keyframes shakeFolder {
-            0% { transform: rotate(0deg); }
-            25% { transform: rotate(3deg); }
-            50% { transform: rotate(-3deg); }
-            75% { transform: rotate(3deg); }
-            100% { transform: rotate(0deg); }
+            text-align: center;
+            line-height: 1.5;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* 彩帶特效 Canvas */
-        #confetti-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 10001;
+        /* 卡片背面：使用圖片3 (大合照) */
+        .card-back {
+            /* 引用本地圖片 card_bg.jpg */
+            background-image: url('card_bg.jpg');
+            background-size: cover;
+            background-position: center;
+            transform: rotateY(180deg);
+            border: 4px solid var(--zpd-gold);
         }
 
+        /* 遮罩讓文字清楚 */
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 26, 51, 0.85); /* 深藍色遮罩 */
+            border-radius: 11px;
+        }
+
+        .card-back-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .card-back h2 {
+            font-size: 2.2rem;
+            color: #fff;
+            margin: 10px 0;
+            text-shadow: 0 0 10px var(--zpd-gold);
+            border-bottom: 2px solid var(--zpd-gold);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 5px;
+        }
+
+        /* RWD 調整 */
+        @media (max-width: 768px) {
+            .lottery-section {
+                background-size: cover; /* 手機版改為 cover 以免變形 */
+                padding: 40px 20px;
+                min-height: 400px;
+            }
+            .header-container { flex-direction: column; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading-overlay">
-        <div style="font-size: 4rem;">🍩</div>
-        <h2>正在連線至 ZPD 資料庫...</h2>
-        <p>請稍候，樹懶正在處理中...</p>
+    <header class="header-container">
+        <div class="header-avatar"></div>
+        <div style="text-align: center;">
+            <h1>🦁 ZOOTOPIA 🐰</h1>
+            <div class="subtitle">ZPD 交換禮物大會</div>
+        </div>
+    </header>
+
+    <div class="lottery-section">
+        <div class="lottery-title">📜 ZPD 任務指派卷軸</div>
+        <p style="margin-bottom: 20px;">點擊按鈕，解鎖大家的交換順序！</p>
+        <button class="lottery-btn" onclick="drawOrder()">
+            🎲 開始抽籤 / START
+        </button>
+        <ul id="result-list"></ul>
     </div>
 
-    <div class="header-box">
-        <h1>ZPD 秘密任務中心</h1>
-        <div class="status-bar" id="reset-status">連線中...</div>
+    <div class="section-title">
+        <span>📂 證物室：神秘禮物檔案</span>
     </div>
     
-    <div class="container">
-        <p class="instruction">
-            各位特務，請點擊屬於你的<strong style="color:var(--judy-blue)">「警徽」</strong>領取任務。<br>
-            <span style="font-size:0.9em; color:#888;">（你的守護對象是最高機密，請勿洩漏）</span>
-        </p>
-        <div class="name-grid" id="nameGrid"></div>
-    </div>
-
-    <div class="reset-area">
-        <button class="reset-btn" id="resetBtn">↺ 局長重置系統</button>
-    </div>
-
-    <div id="temple-modal">
-        <canvas id="confetti-canvas"></canvas>
-
-        <div style="position: relative; margin-top: 100px;">
-            <div id="mission-card" class="mission-card">
-                <div>
-                    <div class="mission-avatar">🐰</div>
-                    <div class="target-label">Mission Target</div>
-                    <div class="target-name" id="target-name">???</div>
-                </div>
-                <div class="mission-note">這是一份機密任務。<br>請默默守護目標。</div>
-                <button class="close-btn" id="confirm-close-btn">收到任務 (關閉)</button>
-            </div>
-
-            <div id="secret-folder" class="secret-folder"></div>
+    <div class="gift-grid" id="gift-container">
         </div>
-        
-        <div id="process-text" style="color:white; margin-top:40px; font-size:1.5rem; font-weight:bold; letter-spacing:2px;"></div>
-    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-        // ========================================================
-        // 2. 設定區 (請用你的設定覆蓋這裡!)
-        // ========================================================
-        const firebaseConfig = {
-  apiKey: "AIzaSyC1o8tki1FfKcImKd81K_20nGepvhtg10U",
-  authDomain: "angel-2a4d7.firebaseapp.com",
-  databaseURL: "https://angel-2a4d7-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "angel-2a4d7",
-  storageBucket: "angel-2a4d7.firebasestorage.app",
-  messagingSenderId: "213601480494",
-  appId: "1:213601480494:web:f418fada90ea2ffcfc94bf",
-  measurementId: "G-ES649SK0T6"
-        };
-        // ========================================================
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const ADMIN_PASSWORD = "888";
-
-        const names = [
-            "陳思穎", "劉雅萍", "劉仲修", "詹純蓉", 
-            "陳怡潔", "李琬云", "陳玟伶", "王惠慈", 
-            "何芷霓", "王薏睿", "徐志明"
+    <script>
+        // --- 參與者名單 ---
+        const participants = [
+            "陳思穎", "劉雅萍", "劉仲修", "詹純蓉", "陳怡潔", 
+            "李琬云", "陳玟伶", "王惠慈", "何芷霓", "王薏睿", 
+            "徐志明", "呂和榕", "黃家為", "林虹安"
         ];
-        
-        // 對應的動物頭像 (隨機分配或是指定皆可，這裡隨機選一些可愛的)
-        const animals = ["🦊", "🐰", "🦁", "🐯", "🐨", "🐼", "🐻", "🐭", "🐹", "🐷", "🐸"];
 
-        let currentAssignments = {};
-        let currentDrawn = {};
-        let resetCount = 0;
+        // --- 禮物資料 ---
+        const giftData = [
+            { desc: "包準喜歡包君滿意🤣", giver: "陳思穎", pass: "1223" },
+            { desc: "綜合大禮包+旅行使用", giver: "劉雅萍", pass: "1223" },
+            { desc: "14個禮物理面最好的我沒騙妳", giver: "劉仲修", pass: "1223" },
+            { desc: "近1年買的，讓它們隨時陪伴你、呵護你!", giver: "詹純蓉", pass: "1223" },
+            { desc: "就是聖誕禮物最老套<br>你最不想抽到的那種", giver: "陳怡潔", pass: "1223" },
+            { desc: "白天它只是一個東西<br>晚上可以療癒你的心情", giver: "李琬云", pass: "1223" },
+            { desc: "外表低調、內容卻很有學問<br>裝得住日常，洗得掉煩惱", giver: "陳玟伶", pass: "1223" },
+            { desc: "賭博失敗的東西", giver: "王惠慈", pass: "1223" },
+            { desc: "哪裡都可以用、方便好攜帶", giver: "何芷霓", pass: "1223" },
+            { desc: "超級實用，尤其是在這個季節<br>非常適合", giver: "王薏睿", pass: "1223" },
+            { desc: "在家裡擺了n年，小孩會喜歡<br>有廚房就可以用", giver: "徐志明", pass: "1223" },
+            { desc: "來自大帥哥的禮物", giver: "呂和榕", pass: "1223" },
+            { desc: "木製品", giver: "黃家為", pass: "1223" },
+            { desc: "人在求學階段會用到的東西<br>(？應該)", giver: "林虹安", pass: "1223" }
+        ];
 
-        // Firebase 監聽
-        const gameRef = ref(db, 'angel_game');
-        onValue(gameRef, (snapshot) => {
-            const data = snapshot.val();
-            if (!data) {
-                performReset(true); 
-            } else {
-                currentAssignments = data.assignments || {};
-                currentDrawn = data.drawn || {};
-                resetCount = data.resetCount || 0;
-                renderButtons();
-                updateStatusText();
-                document.getElementById('loading-overlay').style.display = 'none';
-            }
-        });
-
-        function renderButtons() {
-            const grid = document.getElementById('nameGrid');
-            grid.innerHTML = ''; 
+        // --- 抽籤功能 ---
+        function drawOrder() {
+            const listElement = document.getElementById('result-list');
+            const btn = document.querySelector('.lottery-btn');
             
-            names.forEach(name => {
-                let btn = document.createElement('div');
-                btn.className = 'name-btn';
-                btn.innerHTML = `<span>${name}</span>`; // 用 span 包起來方便排版
-                
-                if (currentDrawn[name] === true) {
-                    markButtonAsDrawn(btn);
-                } else {
-                    btn.onclick = () => startDraw(name, btn);
-                }
-                grid.appendChild(btn);
-            });
-        }
-
-        function markButtonAsDrawn(btn) {
-            if (btn.querySelector('.stamp')) return;
-            btn.classList.add('drawn');
-            btn.onclick = null;
-            // 變成已分派圖示
-            btn.innerHTML = `<div style="font-size:2rem;">📁</div><div style="font-size:0.8rem;">CASE CLOSED</div>`;
-            // 蓋章
-            let stamp = document.createElement('div');
-            stamp.className = 'stamp';
-            stamp.innerText = 'MISSION ASSIGNED';
-            btn.appendChild(stamp);
-        }
-
-        // --- 抽籤與動畫 ---
-        window.startDraw = function(name, btnElement) {
-            if(!confirm(`確認身份：特務【${name}】\n\n要領取您的秘密任務嗎？`)) return;
-
-            const modal = document.getElementById('temple-modal');
-            const folder = document.getElementById('secret-folder');
-            const card = document.getElementById('mission-card');
-            const processText = document.getElementById('process-text');
-            const targetNameDisplay = document.getElementById('target-name');
-
-            modal.style.display = 'flex';
-            processText.style.display = 'block';
-            processText.innerText = "解鎖機密檔案中...";
-            
-            // 重置動畫狀態
-            folder.classList.add('shake-folder');
-            card.classList.remove('revealed');
-            
-            // 1. 震動資料夾 (1.5秒)
-            setTimeout(() => {
-                folder.classList.remove('shake-folder');
-                processText.innerText = "檔案解鎖成功！";
-                
-                // 2. 卡片彈出
-                setTimeout(() => {
-                    card.classList.add('revealed');
-                    
-                    // 顯示對象
-                    const target = currentAssignments[name];
-                    targetNameDisplay.innerText = target || "連線錯誤";
-                    processText.style.display = 'none';
-                    
-                    // 3. 放彩帶特效
-                    fireConfetti();
-
-                    // 更新資料庫
-                    update(ref(db, 'angel_game/drawn'), { [name]: true });
-
-                }, 500);
-            }, 1500);
-        }
-
-        // --- 彩帶特效邏輯 (純 JS 模擬) ---
-        function fireConfetti() {
-            const canvas = document.getElementById('confetti-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            
-            const particles = [];
-            const colors = ['#f44336', '#2196F3', '#FFEB3B', '#4CAF50', '#FF9800'];
-            
-            for(let i=0; i<100; i++) {
-                particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 20,
-                    vy: (Math.random() - 1) * 20,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    size: Math.random() * 8 + 4,
-                    life: 100
-                });
+            // 重新抽籤檢查
+            if(listElement.style.display === 'grid') {
+                if(!confirm("⚠️ 確定要重新抽籤嗎？卷軸上的墨跡會被洗掉！")) return;
             }
 
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let active = false;
-                particles.forEach(p => {
-                    if(p.life > 0) {
-                        active = true;
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        p.vy += 0.5; // 重力
-                        p.life--;
-                        
-                        ctx.fillStyle = p.color;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                });
-                if(active) requestAnimationFrame(draw);
-                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 密碼驗證
+            const pwd = prompt("🔐 卷軸解鎖密碼\n請輸入主持人密碼：");
+            if (pwd !== "1223") {
+                alert("🚫 密碼錯誤！卷軸無法開啟。");
+                return;
             }
-            draw();
-        }
 
-        document.getElementById('confirm-close-btn').addEventListener('click', () => {
-            document.getElementById('temple-modal').style.display = 'none';
-        });
-
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            const pwd = prompt("請輸入蠻牛局長的密碼：");
-            if (pwd === ADMIN_PASSWORD) {
-                if(confirm("⚠️ 警告：這將會清除所有特務的任務進度！確定執行？")) {
-                    performReset();
-                }
-            } else if (pwd !== null) {
-                alert("密碼錯誤！請不要隨意嘗試。");
-            }
-        });
-
-        function performReset(isInit = false) {
-            let shuffled = [...names];
+            // 顯示列表
+            listElement.style.display = 'grid';
+            listElement.innerHTML = '';
+            
+            // 洗牌
+            let shuffled = [...participants];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
 
-            let newAssignments = {};
-            for (let i = 0; i < shuffled.length; i++) {
-                newAssignments[shuffled[i]] = shuffled[(i + 1) % shuffled.length];
-            }
-
-            const newGameData = {
-                assignments: newAssignments,
-                drawn: {},
-                resetCount: isInit ? 0 : (resetCount + 1),
-                lastUpdated: Date.now()
-            };
-
-            set(ref(db, 'angel_game'), newGameData);
+            shuffled.forEach((name, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `No.${index + 1} ${name}`;
+                li.style.animationDelay = `${index * 0.1}s`;
+                listElement.appendChild(li);
+            });
+            
+            btn.innerHTML = "🔄 重新抽籤";
         }
 
-        function updateStatusText() {
-            const statusEl = document.getElementById('reset-status');
-            statusEl.innerText = resetCount === 0 
-                ? "系統狀態：初始準備就緒" 
-                : `系統狀態：第 ${resetCount} 輪任務分派中`;
+        // --- 渲染卡片 ---
+        function renderCards() {
+            const container = document.getElementById('gift-container');
+            
+            giftData.forEach((gift, index) => {
+                const cardWrap = document.createElement('div');
+                cardWrap.className = 'card-container';
+                const giftNumber = index + 1;
+                const caseID = `CASE-${Math.floor(1000 + Math.random() * 9000)}`;
+
+                cardWrap.innerHTML = `
+                    <div class="card" id="card-${index}">
+                        <div class="card-face card-front">
+                            <div class="stamp-top-secret">CONFIDENTIAL</div>
+                            <div style="font-family: monospace; color: #888; font-size: 0.9rem; width:100%; text-align:right;">${caseID}</div>
+                            <h3>${gift.desc}</h3>
+                            <div style="margin-top:auto; font-size:0.9rem; color:#666; width:100%; display:flex; justify-content:space-between;">
+                                <span>🔒 禮物 #${giftNumber}</span>
+                                <span>👆 點擊查看</span>
+                            </div>
+                        </div>
+                        <div class="card-face card-back">
+                            <div class="card-back-content">
+                                <div class="badge-icon">🛡️</div>
+                                <div class="giver-label">Gift Agent</div>
+                                <h2>${gift.giver}</h2>
+                                <div class="zpd-footer">Zootopia Police Dept.</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // 點擊事件：翻開要密碼，蓋上不用
+                cardWrap.addEventListener('click', function() {
+                    const card = document.getElementById(`card-${index}`);
+                    
+                    if (card.classList.contains('flipped')) {
+                        card.classList.remove('flipped'); // 蓋回去
+                        return;
+                    }
+
+                    const input = prompt(`👮 ZPD 安全檢查\n請輸入禮物 #${giftNumber} 的密碼：`);
+                    if (input === gift.pass) {
+                        card.classList.add('flipped'); // 翻開
+                    } else if (input !== null) {
+                        alert("🚫 密碼錯誤！");
+                    }
+                });
+
+                container.appendChild(cardWrap);
+            });
         }
+
+        window.onload = renderCards;
     </script>
 </body>
 </html>
+
